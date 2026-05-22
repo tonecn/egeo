@@ -1,0 +1,18 @@
+name = "egeo"
+compatibility_date = "2025-07-18"
+compatibility_flags = ["nodejs_compat"]
+account_id = "cd12733a4ef4947b62901297cbcae9a5"
+
+# ADMIN_USERNAME and ADMIN_PASSWORD must be set as secrets:
+#   wrangler pages secret put ADMIN_USERNAME
+#   wrangler pages secret put ADMIN_PASSWORD
+# For local dev, put them in .dev.vars (see .dev.vars.example)
+
+[[kv_namespaces]]
+binding = "APP_KV"
+id = "299c9209623e4084890ea1bba0b29bc3"
+preview_id = "299c9209623e4084890ea1bba0b29bc3"
+
+[[r2_buckets]]
+binding = "GEOIP_R2"
+bucket_name = "egeo"

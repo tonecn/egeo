@@ -1,0 +1,100 @@
+<script lang="ts">
+  import { geoipApi } from './api.ts';
+  import type { GeoIpData } from './types.ts';
+
+  type GeoIpMeta = { database: string; db_cache_hit: boolean };
+
+  let token = $state('');
+  let ip = $state('');
+  let result = $state<GeoIpData | null>(null);
+  let meta = $state<GeoIpMeta | null>(null);
+  let loading = $state(false);
+  let error = $state('');
+
+  async function query() {
+    const t = token.trim();
+    const i = ip.trim();
+    if (!t || !i) return;
+    loading = true;
+    error = '';
+    result = null;
+    meta = null;
+    const res = await geoipApi.query(t, i);
+    loading = false;
+    if (res.success) {
+      result = res.data;
+      meta = (res as any).meta ?? null;
+    } else {
+      error = res.error.message;
+    }
+  }
+</script>
+
+<section class="card">
+  <div class="card-header">
+    <h2>GeoIP Tester</h2>
+  </div>
+
+  <form class="query-form" onsubmit={(e) => { e.preventDefault(); query(); }}>
+    <label>
+      Bearer Token
+      <input type="text" placeholder="geoip_…" bind:value={token} autocomplete="off" />
+    </label>
+    <label>
+      IP Address
+      <input type="text" placeholder="1.2.3.4" bind:value={ip} />
+    </label>
+    <button type="submit" disabled={loading || !token.trim() || !ip.trim()}>
+      {loading ? 'Querying…' : 'Query'}
+    </button>
+  </form>
+
+  {#if error}<p class="alert alert-error">{error}</p>{/if}
+
+  {#if result}
+    <div class="result-block">
+      {#if meta}
+        <p class="result-meta muted">
+          Database: <span class="mono">{meta.database}</span>
+          &nbsp;·&nbsp;
+          Cache: {meta.db_cache_hit ? '✓ hit' : '✗ miss'}
+        </p>
+      {/if}
+
+      <dl class="dl-grid">
+        <dt>IP</dt><dd class="mono">{result.ip}</dd>
+
+        <dt>Country</dt>
+        <dd>
+          {result.country.iso_code ?? '—'}
+          {#if result.country.name}&nbsp;({result.country.name}){/if}
+        </dd>
+
+        <dt>Continent</dt>
+        <dd>
+          {result.continent.code ?? '—'}
+          {#if result.continent.name}&nbsp;({result.continent.name}){/if}
+        </dd>
+
+        {#if result.subdivisions.length > 0}
+          <dt>Region</dt>
+          <dd>{result.subdivisions.map(s => s.name ?? s.iso_code).join(', ')}</dd>
+        {/if}
+
+        <dt>City</dt><dd>{result.city.name ?? '—'}</dd>
+        <dt>Postal</dt><dd>{result.postal.code ?? '—'}</dd>
+        <dt>Timezone</dt><dd>{result.location.time_zone ?? '—'}</dd>
+
+        {#if result.location.latitude != null}
+          <dt>Coordinates</dt>
+          <dd class="mono">
+            {result.location.latitude}, {result.location.longitude}
+            {#if result.location.accuracy_radius != null}
+              &nbsp;(±{result.location.accuracy_radius} km)
+            {/if}
+          </dd>
+        {/if}
+      </dl>
+    </div>
+  {/if}
+</section>
