@@ -1,7 +1,7 @@
 name = "egeo"
+pages_build_output_dir = "./dist"
 compatibility_date = "2025-07-18"
 compatibility_flags = ["nodejs_compat"]
-account_id = "cd12733a4ef4947b62901297cbcae9a5"
 
 # ADMIN_USERNAME and ADMIN_PASSWORD must be set as secrets:
 #   wrangler pages secret put ADMIN_USERNAME
