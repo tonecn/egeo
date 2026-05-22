@@ -47,9 +47,7 @@
 
 ---
 
-## 软件截图（占位，待你替换）
-
-> 下面先给出 README 位置占位。你把对应图片放到这些路径后即可直接显示。
+## 软件截图
 
 ### 管理端 - Token 管理
 
@@ -68,26 +66,27 @@
 ## 本地开发（当前可用命令）
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 类型检查：
 
 ```bash
-npm run check
+pnpm check
 ```
 
 构建：
 
 ```bash
-npm run build
+pnpm build
 ```
 
 本地模拟 Pages：
 
 ```bash
-npm run pages:dev
+pnpm dev:watch
+pnpm pages:dev
 ```
 
 ---
