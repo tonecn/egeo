@@ -59,6 +59,10 @@
 
 ### 管理端 - GeoIP 测试
 
+> 中文本地化部分，中国大陆返回国家、省/市、城市，其余地方返回国家名称或行政区名称
+
+![GeoIP 测试截图](https://github.com/user-attachments/assets/e2d25f40-81b6-435d-82cb-bffbff3d65ad)
+
 ![GeoIP 测试截图](https://github.com/user-attachments/assets/55f8a212-97d2-4a1a-888f-9429c02bef8b)
 
 ---
