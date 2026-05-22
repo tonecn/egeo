@@ -53,15 +53,15 @@
 
 ### 管理端 - Token 管理
 
-![Token 管理截图](./docs/screenshots/token-manager.png)
+![Token 管理截图](https://github.com/user-attachments/assets/aad7cabc-ba71-4430-8b65-9eadf654d66b)
 
 ### 管理端 - 数据库上传
 
-![数据库上传截图](./docs/screenshots/database-manager.png)
+![数据库上传截图](https://github.com/user-attachments/assets/7a76993f-9255-416d-b91c-f58a2120458d)
 
 ### 管理端 - GeoIP 测试
 
-![GeoIP 测试截图](./docs/screenshots/geoip-tester.png)
+![GeoIP 测试截图](https://github.com/user-attachments/assets/55f8a212-97d2-4a1a-888f-9429c02bef8b)
 
 ---
 
