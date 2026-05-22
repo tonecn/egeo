@@ -49,15 +49,20 @@ export function normalizeCityRecord(
   // Chinese country name: prefer MaxMind zh-CN, fall back to static map.
   const zhCountry = getZhCountryName(isoCode, raw?.country?.names?.['zh-CN']);
 
-  // Chinese subdivision: only meaningful for CN IPs.
-  // ip2regionResult format: "国家|区域|省份|城市|ISP"
+  // Chinese subdivision/city: only meaningful for CN IPs.
+  // ip2regionResult format: "国家|省份|城市|ISP|国家代码"
   let zhSubdivision: string | null = null;
+  let zhCity: string | null = null;
   if (isCN) {
     if (ip2regionResult) {
-      const province = ip2regionResult.split('|')[2]?.trim();
-      zhSubdivision = province && province !== '0' ? province : '未知';
+      const parts = ip2regionResult.split('|');
+      const province = parts[1]?.trim();
+      const city = parts[2]?.trim();
+      zhSubdivision = province && province !== '0' ? province : null;
+      zhCity = city && city !== '0' ? city : null;
     } else {
-      zhSubdivision = '未知';
+      zhSubdivision = null;
+      zhCity = null;
     }
   }
 
@@ -91,6 +96,7 @@ export function normalizeCityRecord(
       zh: {
         country: zhCountry,
         subdivision: zhSubdivision,
+        city: zhCity,
       },
     },
   };

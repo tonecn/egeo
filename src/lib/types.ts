@@ -37,6 +37,7 @@ export interface GeoIpData {
     zh: {
       country: string | null;
       subdivision: string | null;
+      city: string | null;
     };
   };
 }

@@ -106,6 +106,9 @@
         {#if result.localization.zh.subdivision != null}
           <dt>省份</dt><dd>{result.localization.zh.subdivision}</dd>
         {/if}
+        {#if result.localization.zh.city != null}
+          <dt>城市</dt><dd>{result.localization.zh.city}</dd>
+        {/if}
       </dl>
     </div>
   {/if}
