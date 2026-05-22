@@ -1,5 +1,6 @@
 import { Reader } from 'mmdb-lib';
 import type { ActiveDbConfig, Env } from './types.ts';
+import { getZhCountryName } from './zh-localization.ts';
 
 interface CityRecord {
   continent?: { code?: string; names?: Record<string, string> };
@@ -37,7 +38,29 @@ export async function getDbReader(
   return { reader, cacheHit: false };
 }
 
-export function normalizeCityRecord(raw: CityRecord | null, ip: string) {
+export function normalizeCityRecord(
+  raw: CityRecord | null,
+  ip: string,
+  ip2regionResult: string | null = null,
+) {
+  const isoCode = raw?.country?.iso_code ?? null;
+  const isCN = isoCode === 'CN';
+
+  // Chinese country name: prefer MaxMind zh-CN, fall back to static map.
+  const zhCountry = getZhCountryName(isoCode, raw?.country?.names?.['zh-CN']);
+
+  // Chinese subdivision: only meaningful for CN IPs.
+  // ip2regionResult format: "国家|区域|省份|城市|ISP"
+  let zhSubdivision: string | null = null;
+  if (isCN) {
+    if (ip2regionResult) {
+      const province = ip2regionResult.split('|')[2]?.trim();
+      zhSubdivision = province && province !== '0' ? province : '未知';
+    } else {
+      zhSubdivision = '未知';
+    }
+  }
+
   return {
     ip,
     continent: {
@@ -45,7 +68,7 @@ export function normalizeCityRecord(raw: CityRecord | null, ip: string) {
       name: raw?.continent?.names?.en ?? null,
     },
     country: {
-      iso_code: raw?.country?.iso_code ?? null,
+      iso_code: isoCode,
       name: raw?.country?.names?.en ?? null,
     },
     subdivisions: (raw?.subdivisions ?? []).map(s => ({
@@ -63,6 +86,12 @@ export function normalizeCityRecord(raw: CityRecord | null, ip: string) {
     },
     postal: {
       code: raw?.postal?.code ?? null,
+    },
+    localization: {
+      zh: {
+        country: zhCountry,
+        subdivision: zhSubdivision,
+      },
     },
   };
 }

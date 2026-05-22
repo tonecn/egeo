@@ -207,7 +207,9 @@ tr:last-child td { border-bottom: none; }
 .query-form button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .result-block { display: flex; flex-direction: column; gap: 0.5rem; }
+.result-block + .result-block { margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px solid var(--border); }
 .result-meta { font-size: 0.8rem; }
+.localization-title { font-size: 0.85rem; font-weight: 600; color: var(--muted); margin: 0 0 0.5rem; text-transform: uppercase; letter-spacing: 0.04em; }
 
 /* ── Keep-alive: hide inactive tabs without unmounting ── */
 .hidden { display: none; }

@@ -96,5 +96,17 @@
         {/if}
       </dl>
     </div>
+
+    <div class="result-block">
+      <h3 class="localization-title">本地化 / Localization</h3>
+
+      <dl class="dl-grid">
+        <dt>语言</dt><dd>中文（简体）</dd>
+        <dt>国家 / 地区</dt><dd>{result.localization.zh.country ?? '—'}</dd>
+        {#if result.localization.zh.subdivision != null}
+          <dt>省份</dt><dd>{result.localization.zh.subdivision}</dd>
+        {/if}
+      </dl>
+    </div>
   {/if}
 </section>

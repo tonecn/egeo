@@ -13,6 +13,13 @@ export interface ActiveDbConfig {
   size: number;
 }
 
+export interface ActiveIp2RegionConfig {
+  object_key: string;
+  filename: string;
+  uploaded_at: string;
+  size: number;
+}
+
 export interface GeoIpData {
   ip: string;
   continent: { code: string | null; name: string | null };
@@ -26,6 +33,12 @@ export interface GeoIpData {
     accuracy_radius: number | null;
   };
   postal: { code: string | null };
+  localization: {
+    zh: {
+      country: string | null;
+      subdivision: string | null;
+    };
+  };
 }
 
 export interface ApiSuccess<T> {

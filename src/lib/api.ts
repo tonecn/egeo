@@ -1,4 +1,4 @@
-import type { ApiResponse, TokenRecord, ActiveDbConfig, GeoIpData } from './types.ts';
+import type { ApiResponse, TokenRecord, ActiveDbConfig, ActiveIp2RegionConfig, GeoIpData } from './types.ts';
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   const isFormData = options.body instanceof FormData;
@@ -54,6 +54,19 @@ export const adminApi = {
 
   getConfig() {
     return request<unknown>('/admin/config');
+  },
+
+  getIp2Region() {
+    return request<ActiveIp2RegionConfig>('/admin/ip2region');
+  },
+
+  uploadIp2Region(file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return request<ActiveIp2RegionConfig>('/admin/ip2region/upload', {
+      method: 'POST',
+      body: formData,
+    });
   },
 };
 

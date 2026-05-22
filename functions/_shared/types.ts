@@ -23,3 +23,10 @@ export interface ActiveDbConfig {
   uploaded_at: string;
   size: number;
 }
+
+export interface ActiveIp2RegionConfig {
+  object_key: string;
+  filename: string;
+  uploaded_at: string;
+  size: number;
+}
