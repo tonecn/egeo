@@ -2,7 +2,7 @@
   import { geoipApi } from './api.ts';
   import type { GeoIpData } from './types.ts';
 
-  type GeoIpMeta = { database: string; db_cache_hit: boolean };
+  type GeoIpMeta = { database: { filename: string }; db_cache_hit: boolean };
 
   let token = $state('');
   let ip = $state('');
@@ -55,7 +55,7 @@
     <div class="result-block">
       {#if meta}
         <p class="result-meta muted">
-          Database: <span class="mono">{meta.database}</span>
+          Database: <span class="mono">{meta.database.filename}</span>
           &nbsp;·&nbsp;
           Cache: {meta.db_cache_hit ? '✓ hit' : '✗ miss'}
         </p>
