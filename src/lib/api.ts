@@ -12,6 +12,14 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<ApiR
   return res.json() as Promise<ApiResponse<T>>;
 }
 
+export function buildGeoIpQueryPath(ip: string): string {
+  return `/api/geoip?ip=${encodeURIComponent(ip.trim())}`;
+}
+
+export function buildGeoIpHeaders(token: string): { Authorization: string } {
+  return { Authorization: `Bearer ${token.trim()}` };
+}
+
 // ── Admin API (no auth param — browser handles Basic Auth automatically) ───
 
 export const adminApi = {
@@ -74,8 +82,9 @@ export const adminApi = {
 
 export const geoipApi = {
   async query(token: string, ip: string): Promise<ApiResponse<GeoIpData> & { meta?: unknown }> {
-    const res = await fetch(`/api/geoip?ip=${encodeURIComponent(ip)}`, {
-      headers: { Authorization: `Bearer ${token}` },
+    const res = await fetch(buildGeoIpQueryPath(ip), {
+      method: 'GET',
+      headers: buildGeoIpHeaders(token),
     });
     return res.json();
   },

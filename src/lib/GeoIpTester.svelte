@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { geoipApi } from './api.ts';
+  import { buildGeoIpHeaders, buildGeoIpQueryPath, geoipApi } from './api.ts';
   import type { GeoIpData } from './types.ts';
 
   type GeoIpMeta = { database: { filename: string }; db_cache_hit: boolean };
@@ -10,16 +10,30 @@
   let meta = $state<GeoIpMeta | null>(null);
   let loading = $state(false);
   let error = $state('');
+  let copied = $state(false);
+
+  const trimmedToken = $derived(token.trim());
+  const trimmedIp = $derived(ip.trim());
+  const requestPath = $derived(buildGeoIpQueryPath(trimmedIp));
+  const requestHeaders = $derived(buildGeoIpHeaders(trimmedToken));
+  const requestUrl = $derived(
+    typeof window === 'undefined'
+      ? requestPath
+      : `${window.location.protocol}//${window.location.host}${requestPath}`
+  );
+  const curlCommand = $derived([
+    'curl --request GET',
+    `  --url ${JSON.stringify(requestUrl)}`,
+    `  --header ${JSON.stringify(`Authorization: ${requestHeaders.Authorization ?? ''}`)}`,
+  ].join(' \\\n'));
 
   async function query() {
-    const t = token.trim();
-    const i = ip.trim();
-    if (!t || !i) return;
+    if (!trimmedToken || !trimmedIp) return;
     loading = true;
     error = '';
     result = null;
     meta = null;
-    const res = await geoipApi.query(t, i);
+    const res = await geoipApi.query(trimmedToken, trimmedIp);
     loading = false;
     if (res.success) {
       result = res.data;
@@ -27,6 +41,15 @@
     } else {
       error = res.error.message;
     }
+  }
+
+  async function copyCurl() {
+    if (!trimmedToken || !trimmedIp || typeof navigator === 'undefined' || !navigator.clipboard) return;
+    await navigator.clipboard.writeText(curlCommand);
+    copied = true;
+    setTimeout(() => {
+      copied = false;
+    }, 1600);
   }
 </script>
 
@@ -48,6 +71,16 @@
       {loading ? 'Querying…' : 'Query'}
     </button>
   </form>
+
+  <div class="curl-block">
+    <div class="curl-header">
+      <h3>cURL</h3>
+      <button class="btn-sm" type="button" disabled={!trimmedToken || !trimmedIp} onclick={copyCurl}>
+        {copied ? 'Copied' : 'Copy cURL'}
+      </button>
+    </div>
+    <pre class="curl-command"><code>{curlCommand}</code></pre>
+  </div>
 
   {#if error}<p class="alert alert-error">{error}</p>{/if}
 
